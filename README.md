@@ -46,36 +46,44 @@ pip install -r requirements.txt
 ```
 
 4. configure backend
-a. create .env file (see .env.example)
-b. configure database connection in .env
-c. set app name and version in settings.py
+- create .env file (see .env.example)
+- configure database connection in .env
+- set app name and version in settings.py
 
 5. create alembic.ini file (see alembic.ini.example)
 
 
-5. run backend
+6. run backend
 ```
 uvicorn main:app --reload
 ``` 
 
-6. Verify backend is running
-a. open browser and navigate to
+7. Verify backend is running
+- open browser and navigate to
 ```
 http://localhost:8000/docs
 ```
 
-b. verify that healthcheck endpoint is accessible
+- verify that healthcheck endpoint is accessible
 
 
 ## Frontend Setup
 
-1. install dependencies
+0. update index.html
+- set title to app name
+- set icon to app-icon.svg
+
+1. update settings.ts   
+- set apiUrl to backend api url
+- set appName to app name
+
+2. install dependencies
 ```
 cd frontend
 npm install
 ```
 
-2. run frontend
+3. run frontend
 ```
 npm run dev
 ```
