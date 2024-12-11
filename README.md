@@ -27,8 +27,11 @@ Functionalities:
 ## Repo Setup
 
 1. download repo
-- download zip file and unzip
-- name root folder as APP_NAME
+- retrieve repo
+```
+wget https://github.com/cliff-rosen/fullstack_template/archive/refs/heads/master.zip -O fullstack_template.zip
+```
+- unzip and name root folder as APP_NAME
 
 2. navigate to repo
 ```
