@@ -45,13 +45,13 @@ cd APP_NAME
 git init
 git add .
 git commit -m "initial commit"
-git branch -M main
+git branch -M master
 ```
 
 5. push to github
 ```
 git remote add origin https://github.com/cliff-rosen/APP_NAME.git
-git push -u origin main
+git push -u origin master
 ```
 
 
