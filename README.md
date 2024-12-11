@@ -29,7 +29,7 @@ Functionalities:
 1. download repo
 - retrieve repo
 ```
-wget https://github.com/cliff-rosen/fullstack_template/archive/refs/heads/master.zip -O fullstack_template.zip
+curl -L -o fullstack_template.zip https://github.com/cliff-rosen/fullstack_template/archive/refs/heads/master.zip
 ```
 - unzip and name root folder as APP_NAME
 
