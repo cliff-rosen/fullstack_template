@@ -21,6 +21,7 @@ app = FastAPI(
     }
 )
 
+
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     logger.info("="*50)

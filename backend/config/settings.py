@@ -1,7 +1,5 @@
 from pydantic_settings import BaseSettings
 import os
-from datetime import timedelta
-from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()

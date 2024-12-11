@@ -24,6 +24,10 @@ Functionalities:
 - User Management
 - Healthcheck
 
+## Database Setup
+- determine database name
+- create a database in AWS RDS
+- set DB_NAME in .env
 
 ## Backend Setup
 
