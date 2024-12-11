@@ -50,7 +50,7 @@ git branch -M main
 
 5. push to github
 ```
-git remote add origin https://github.com/your-repo/APP_NAME.git
+git remote add origin https://github.com/cliff-rosen/APP_NAME.git
 git push -u origin main
 ```
 
