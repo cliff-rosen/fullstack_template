@@ -24,6 +24,34 @@ Functionalities:
 - User Management
 - Healthcheck
 
+## Repo Setup
+
+1. download repo
+- download zip file and unzip
+- name root folder as APP_NAME
+
+2. navigate to repo
+```
+cd APP_NAME
+```
+
+3. create repo on github
+
+4. initialize git repo
+```
+git init
+git add .
+git commit -m "initial commit"
+git branch -M main
+```
+
+5. push to github
+```
+git remote add origin https://github.com/your-repo/APP_NAME.git
+git push -u origin main
+```
+
+
 ## Database Setup
 - determine database name
 - create a database in AWS RDS
@@ -39,8 +67,6 @@ python -m venv venv
 
 2. activate virtual environment
 ```
-.\.venv\Scripts\activate
-# for PowerShell
 venv\Scripts\Activate.ps1
 ```
 
