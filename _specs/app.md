@@ -10,7 +10,7 @@
 
 | Feature | MVP Status | Description |
 |---------|------------|-------------|
-| Quick Entry | ✅ MVP | Global entry with topic selection/creation |
+| Fewature 1 | ✅ MVP | Bla bla bla |
 
 ## Technical Architecture
 
