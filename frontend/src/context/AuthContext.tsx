@@ -10,6 +10,8 @@ interface AuthContextType {
     logout: () => void
     error: string | null
     handleSessionExpired: () => void
+    initiateGoogleLogin: () => Promise<void>
+    handleGoogleCallback: (idToken: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -77,7 +79,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const register = useMutation({
         mutationFn: async (credentials: { email: string; password: string }) => {
             try {
-                const response = await api.post('/api/auth/register', credentials)
+                const response = await api.post('/api/auth/register', {
+                    ...credentials,
+                    auth_type: "native"
+                })
                 return response.data
             } catch (error: any) {
                 if (error.response) {
@@ -114,8 +119,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setError('Your session has expired. Please login again.')
     }
 
+    // Function to initiate Google login
+    const initiateGoogleLogin = async () => {
+        try {
+            const response = await api.get('/api/auth/google/auth-url')
+            window.location.href = response.data.auth_url
+        } catch (error: any) {
+            setError('Failed to initiate Google login')
+        }
+    }
+
+    // Function to handle Google callback
+    const handleGoogleCallback = async (idToken: string) => {
+        try {
+            const response = await api.post('/api/auth/google/callback', {
+                id_token: idToken
+            })
+            const data = response.data
+            localStorage.setItem('authToken', data.access_token)
+            localStorage.setItem('user', JSON.stringify({
+                id: data.user_id,
+                username: data.username
+            }))
+            setIsAuthenticated(true)
+            setUser({
+                id: data.user_id,
+                username: data.username
+            })
+            setError(null)
+        } catch (error: any) {
+            setError('Failed to authenticate with Google')
+            throw error
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout, error, handleSessionExpired }}>
+        <AuthContext.Provider value={{ 
+            isAuthenticated, 
+            user, 
+            login, 
+            register, 
+            logout, 
+            error, 
+            handleSessionExpired,
+            initiateGoogleLogin,
+            handleGoogleCallback
+        }}>
             {children}
         </AuthContext.Provider>
     )

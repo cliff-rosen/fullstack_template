@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     # Google OAuth settings
     GOOGLE_CLIENT_ID: str | None = os.getenv("GOOGLE_CLIENT_ID")
     GOOGLE_REDIRECT_URI: str = os.getenv(
-        "GOOGLE_REDIRECT_URI", "http://localhost:3000/auth_callback")
+        "GOOGLE_REDIRECT_URI", "http://localhost:5173/auth/google/callback")
 
     @property
     def DATABASE_URL(self) -> str:

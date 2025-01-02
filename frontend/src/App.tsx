@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import TopBar from './components/TopBar'
 import { ThemeProvider } from './context/ThemeContext'
 import { useAuth } from './context/AuthContext'
@@ -20,6 +20,48 @@ handleSessionExpired behavior:
 - sets error to null
 */
 
+function GoogleCallback() {
+  const { handleGoogleCallback } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleCallback = async () => {
+      // Get the ID token from the URL hash
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const idToken = hashParams.get('id_token');
+
+      if (!idToken) {
+        setError('No ID token found in URL');
+        return;
+      }
+
+      try {
+        await handleGoogleCallback(idToken);
+        navigate('/'); // Use React Router navigation instead of window.location
+      } catch (error) {
+        setError('Failed to authenticate with Google');
+      }
+    };
+
+    handleCallback();
+  }, [handleGoogleCallback, navigate]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50">
+        <div className="text-red-600 dark:text-red-400">{error}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50">
+      <div className="text-gray-600 dark:text-gray-400">Authenticating...</div>
+    </div>
+  );
+}
+
 function App() {
   const { handleSessionExpired, isAuthenticated, login, register, error } = useAuth()
   const [isRegistering, setIsRegistering] = useState(false)
@@ -32,20 +74,27 @@ function App() {
     return () => setSessionExpiredHandler(() => { })
   }, [handleSessionExpired])
 
-
   if (!isAuthenticated) {
     return (
       <BrowserRouter>
         <ThemeProvider>
-          <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50">
-            <LoginForm
-              isRegistering={isRegistering}
-              setIsRegistering={setIsRegistering}
-              login={login}
-              register={register}
-              error={error}
+          <Routes>
+            <Route path="/auth/google/callback" element={<GoogleCallback />} />
+            <Route
+              path="*"
+              element={
+                <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50">
+                  <LoginForm
+                    isRegistering={isRegistering}
+                    setIsRegistering={setIsRegistering}
+                    login={login}
+                    register={register}
+                    error={error}
+                  />
+                </div>
+              }
             />
-          </div>
+          </Routes>
         </ThemeProvider>
       </BrowserRouter>
     )
