@@ -1,8 +1,10 @@
 from pydantic_settings import BaseSettings
 import os
 from dotenv import load_dotenv
+from typing import Optional
 
 load_dotenv()
+
 
 class Settings(BaseSettings):
     APP_NAME: str = "Fullstack Template"
@@ -14,29 +16,36 @@ class Settings(BaseSettings):
     DB_USER: str = os.getenv("DB_USER")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD")
     DB_NAME: str = os.getenv("DB_NAME")
-    
+
     # Authentication settings
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
-    
+
     # API settings
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY")
     ANTHROPIC_MODEL: str = "claude-3-sonnet-20240229"
-    
+    GOOGLE_SEARCH_API_KEY: str | None = os.getenv("GOOGLE_SEARCH_API_KEY")
+    GOOGLE_SEARCH_ENGINE_ID: str | None = os.getenv("GOOGLE_SEARCH_ENGINE_ID")
+    OPENAI_API_KEY: str | None = os.getenv("OPENAI_API_KEY")
+    NEO4J_API_KEY: str | None = os.getenv("NEO4J_API_KEY")
+
     # CORS settings
     CORS_ORIGINS: list[str] = ["*"]  # In production, specify exact origins
     CORS_ALLOW_CREDENTIALS: bool = True
     CORS_ALLOW_METHODS: list[str] = ["*"]
     CORS_ALLOW_HEADERS: list[str] = ["*", "Authorization"]
     CORS_EXPOSE_HEADERS: list[str] = ["Authorization"]
-    
+
     # Logging settings
     LOG_LEVEL: str = "INFO"
     LOG_DIR: str = "logs"
     LOG_FILENAME_PREFIX: str = "app"
     LOG_MAX_BYTES: int = 10 * 1024 * 1024  # 10MB
     LOG_BACKUP_COUNT: int = 5
+
+    # Google OAuth settings
+    GOOGLE_CLIENT_ID: str | None = os.getenv("GOOGLE_CLIENT_ID")
 
     @property
     def DATABASE_URL(self) -> str:
@@ -45,5 +54,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        env_file_encoding = "utf-8"
 
-settings = Settings() 
+
+settings = Settings()

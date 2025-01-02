@@ -1,11 +1,47 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Form, Request
 from sqlalchemy.orm import Session
 from database import get_db
 from services import auth_service
-from schemas import UserCreate, Token
+from schemas import UserCreate, Token, AuthType
 from typing import Annotated
+from pydantic import BaseModel, Field
 
 router = APIRouter()
+
+
+class GoogleAuthRequest(BaseModel):
+    """Schema for Google auth request"""
+    id_token: str = Field(description="Google ID token from client")
+
+
+@router.post(
+    "/google/callback",
+    response_model=Token,
+    summary="Handle Google OIDC authentication"
+)
+async def google_auth(
+    request: GoogleAuthRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Handle Google OIDC authentication. This endpoint:
+    1. Verifies the Google ID token
+    2. Creates a new user if they don't exist
+    3. Returns a JWT token for the user
+
+    - **id_token**: Google ID token from client-side Google Sign-In
+    """
+    try:
+        token = await auth_service.handle_google_auth(db, request.id_token)
+        return token
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
 
 @router.post(
     "/register",
@@ -19,6 +55,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     - **password**: string
     """
     return await auth_service.create_user(db, user)
+
 
 @router.post(
     "/login",
@@ -51,7 +88,7 @@ async def login(
 
     - **username**: email address
     - **password**: user password
-    
+
     Returns:
     - **access_token**: JWT token to use for authentication
     - **token_type**: "bearer"

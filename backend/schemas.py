@@ -3,12 +3,24 @@ from datetime import datetime
 from typing import Optional, List
 from enum import Enum
 
+
+class AuthType(Enum):
+    """Enum for user authentication types"""
+    NATIVE = "native"  # User registered directly with the app
+    GOOGLE = "google"  # User registered via Google OIDC
+
 ##### USER SCHEMA #####
 
 
 class UserBase(BaseModel):
     """Base schema for user data"""
     email: EmailStr = Field(description="User's email address")
+    auth_type: AuthType = Field(
+        description="Authentication method used for registration")
+    google_id: Optional[str] = Field(
+        default=None,
+        description="Google ID for users who registered through Google OIDC"
+    )
 
 
 class UserCreate(UserBase):
@@ -100,4 +112,3 @@ class TopicSearchResponse(TopicResponse):
 
 class TopicSuggestionResponse(BaseModel):
     suggested_name: str
-
