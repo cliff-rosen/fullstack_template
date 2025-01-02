@@ -5,6 +5,7 @@ from services import auth_service
 from schemas import UserCreate, Token, AuthType
 from typing import Annotated
 from pydantic import BaseModel, Field
+from config.settings import settings
 
 router = APIRouter()
 
@@ -104,3 +105,22 @@ async def login(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+
+@router.get(
+    "/google/auth-url",
+    summary="Get Google OAuth2 authorization URL"
+)
+async def google_auth_url():
+    """
+    Get the URL to redirect users to for Google OAuth2 authentication.
+    This URL will redirect users to Google's consent screen.
+    """
+    return {
+        "auth_url": f"https://accounts.google.com/o/oauth2/v2/auth?"
+        f"client_id={settings.GOOGLE_CLIENT_ID}&"
+        "response_type=id_token&"
+        f"redirect_uri={settings.GOOGLE_REDIRECT_URI}&"
+        "scope=openid email profile&"
+        "nonce=random_nonce"  # In production, generate a secure random nonce
+    }
